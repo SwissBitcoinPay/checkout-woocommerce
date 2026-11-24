@@ -1,0 +1,296 @@
+name: CI
+
+# Every pull request and every push to main (and the release workflow, before it keeps the ZIP):
+# the WordPress coding standards, the static analysis, the pinned SDK and the translations' catalog;
+# the plugin's ZIP, built twice from the lockfile (the same bytes) and checked; then, against
+# what that ZIP holds, the unit and integration tests on each supported PHP version, with the
+# oldest and the latest supported WordPress and WooCommerce, orders in HPOS tables and as posts;
+# and the end-to-end test on WordPress, from the ZIP: on PHP's built-in web server, and on
+# WordPress's official Docker image. Never the network in the tests: the SDK is faked.
+#
+# PHP is a static build of static-php-cli (dl.static-php.dev, its "bulk" set of extensions),
+# Composer its phar, each checked against its SHA-256; the database of the integration tests is
+# MariaDB's official binary archive, run by the runner's user (tools/tests/mariadb.sh).
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_call:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+env:
+  COMPOSER_URL: https://getcomposer.org/download/2.11.2/composer.phar
+  COMPOSER_SHA256: dd158c0afd41d15fac89e1b4e47b5d42911fe316c3687cd5edac98319b25d028
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  checks:
+    name: Coding standards, static analysis, pinned SDK, translations
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    env:
+      PHP_VERSION: 8.4.23
+      PHP_SHA256: 5fa2b5f1cc9d7f79b19718926b4f4f0bb6949db52073b2fabf8ae52de3993af5
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      # PHP and Composer in RUNNER_TEMP, PHP's ini there too (PHPRC), Composer's home as well.
+      - name: PHP ${{ env.PHP_VERSION }} and Composer, their checksums checked
+        run: |
+          mkdir -p "$RUNNER_TEMP/php" "$RUNNER_TEMP/composer"
+          curl -fsSL --retry 3 --retry-all-errors -o "$RUNNER_TEMP/php.tar.gz" "https://dl.static-php.dev/static-php-cli/bulk/php-$PHP_VERSION-cli-linux-x86_64.tar.gz"
+          echo "$PHP_SHA256  $RUNNER_TEMP/php.tar.gz" | sha256sum -c -
+          tar -xzf "$RUNNER_TEMP/php.tar.gz" -C "$RUNNER_TEMP/php" php
+          curl -fsSL --retry 3 --retry-all-errors -o "$RUNNER_TEMP/php/composer" "$COMPOSER_URL"
+          echo "$COMPOSER_SHA256  $RUNNER_TEMP/php/composer" | sha256sum -c -
+          chmod +x "$RUNNER_TEMP/php/composer"
+          printf 'zend.assertions=1\nerror_reporting=-1\nmemory_limit=1G\n' > "$RUNNER_TEMP/php/php.ini"
+          { echo "PHPRC=$RUNNER_TEMP/php"; echo "COMPOSER_HOME=$RUNNER_TEMP/composer"; } >> "$GITHUB_ENV"
+          echo "$RUNNER_TEMP/php" >> "$GITHUB_PATH"
+      - run: php -r "echo PHP_VERSION, ' ', OPENSSL_VERSION_TEXT, PHP_EOL;"
+      # The dependencies are pinned to exact versions, those of the lockfile
+      # (tests/Unit/DependenciesTest.php), which Composer's check of the constraints reports.
+      - run: composer validate --strict --no-check-all
+      # The lockfile as it is, the development tools included; Composer then prefixes the
+      # dependencies (tools/strauss.sh, Strauss's phar checked against its SHA-256). It downloads
+      # the packages from GitHub's API with the job's token, as setup-php has it do: anonymous,
+      # the runners would share 60 requests an hour.
+      - run: composer install --no-interaction --no-progress
+        env:
+          COMPOSER_AUTH: '{"github-oauth": {"github.com": "${{ github.token }}"}}'
+      - name: The pinned SDK is its commit's, file for file
+        run: php tools/sdk.php check
+      - name: WordPress coding standards (PHPCS, WPCS, PHPCompatibilityWP)
+        run: vendor/bin/phpcs
+      - name: Static analysis (PHPStan, level max, strict rules; the plugin, its tests and tools)
+        run: vendor/bin/phpstan analyse --no-progress
+      - name: The translations' catalog is the sources' (WP-CLI's phar checked against its SHA-512)
+        run: sh tools/i18n.sh check
+
+  build:
+    name: The plugin's ZIP
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    env:
+      # The oldest PHP the plugin supports: the ZIP's check runs php -l on every file it holds.
+      PHP_VERSION: 8.2.32
+      PHP_SHA256: 866532d2b463ff256d063432d529e966cc53e4a039109ccbfc4ee4dc51d649f1
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: PHP ${{ env.PHP_VERSION }} and Composer, their checksums checked
+        run: |
+          mkdir -p "$RUNNER_TEMP/php" "$RUNNER_TEMP/composer"
+          curl -fsSL --retry 3 --retry-all-errors -o "$RUNNER_TEMP/php.tar.gz" "https://dl.static-php.dev/static-php-cli/bulk/php-$PHP_VERSION-cli-linux-x86_64.tar.gz"
+          echo "$PHP_SHA256  $RUNNER_TEMP/php.tar.gz" | sha256sum -c -
+          tar -xzf "$RUNNER_TEMP/php.tar.gz" -C "$RUNNER_TEMP/php" php
+          curl -fsSL --retry 3 --retry-all-errors -o "$RUNNER_TEMP/php/composer" "$COMPOSER_URL"
+          echo "$COMPOSER_SHA256  $RUNNER_TEMP/php/composer" | sha256sum -c -
+          chmod +x "$RUNNER_TEMP/php/composer"
+          printf 'zend.assertions=1\nerror_reporting=-1\nmemory_limit=1G\n' > "$RUNNER_TEMP/php/php.ini"
+          { echo "PHPRC=$RUNNER_TEMP/php"; echo "COMPOSER_HOME=$RUNNER_TEMP/composer"; } >> "$GITHUB_ENV"
+          echo "$RUNNER_TEMP/php" >> "$GITHUB_PATH"
+      # tools/build.sh installs the lockfile without the development tools, prefixes it, zips the
+      # plugin reproducibly, and checks the ZIP (tools/package.php): built twice, the same bytes.
+      - name: Build the ZIP twice, and check it
+        env:
+          COMPOSER_AUTH: '{"github-oauth": {"github.com": "${{ github.token }}"}}'
+        run: |
+          first="$(bash tools/build.sh | tail -n 1)"
+          second="$(bash tools/build.sh | tail -n 1)"
+          echo "SHA-256: $first"
+          if [ "$first" != "$second" ]; then
+            echo "::error::Two builds of the ZIP differ: $first, then $second"; exit 1
+          fi
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: plugin
+          path: build/sattleme-for-woocommerce-*.zip
+          if-no-files-found: error
+          retention-days: 7
+
+  tests:
+    name: Tests (PHP ${{ matrix.php }}, WordPress ${{ matrix.wordpress }}, WooCommerce ${{ matrix.woocommerce }})
+    needs: build
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        # Each PHP version the plugin supports (8.2 or later, as the SDK), and the oldest and the
+        # latest WordPress (7.0, 7.1) and WooCommerce (11.1, 11.3) it supports, each twice.
+        include:
+          - php: 8.2.32
+            sha256: 866532d2b463ff256d063432d529e966cc53e4a039109ccbfc4ee4dc51d649f1
+            wordpress: 7.0.9
+            woocommerce: 11.1.2
+          - php: 8.3.32
+            sha256: 7928396c17aabcd5bb074fe82e07b4cb693c6d04360a4415799a143a9f9686c6
+            wordpress: 7.1.5
+            woocommerce: 11.1.2
+          - php: 8.4.23
+            sha256: 5fa2b5f1cc9d7f79b19718926b4f4f0bb6949db52073b2fabf8ae52de3993af5
+            wordpress: 7.0.9
+            woocommerce: 11.3.0
+          - php: 8.5.8
+            sha256: bfaa12e0f6f5788259bc20d0d3f08e1e851bce7f05d43e38fb77041e12a32663
+            wordpress: 7.1.5
+            woocommerce: 11.3.0
+    env:
+      PHP_VERSION: ${{ matrix.php }}
+      PHP_SHA256: ${{ matrix.sha256 }}
+      WORDPRESS: ${{ matrix.wordpress }}
+      WOOCOMMERCE: ${{ matrix.woocommerce }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: PHP ${{ env.PHP_VERSION }} and Composer, their checksums checked
+        run: |
+          mkdir -p "$RUNNER_TEMP/php" "$RUNNER_TEMP/composer"
+          curl -fsSL --retry 3 --retry-all-errors -o "$RUNNER_TEMP/php.tar.gz" "https://dl.static-php.dev/static-php-cli/bulk/php-$PHP_VERSION-cli-linux-x86_64.tar.gz"
+          echo "$PHP_SHA256  $RUNNER_TEMP/php.tar.gz" | sha256sum -c -
+          tar -xzf "$RUNNER_TEMP/php.tar.gz" -C "$RUNNER_TEMP/php" php
+          curl -fsSL --retry 3 --retry-all-errors -o "$RUNNER_TEMP/php/composer" "$COMPOSER_URL"
+          echo "$COMPOSER_SHA256  $RUNNER_TEMP/php/composer" | sha256sum -c -
+          chmod +x "$RUNNER_TEMP/php/composer"
+          printf 'zend.assertions=1\nerror_reporting=-1\nmemory_limit=1G\n' > "$RUNNER_TEMP/php/php.ini"
+          { echo "PHPRC=$RUNNER_TEMP/php"; echo "COMPOSER_HOME=$RUNNER_TEMP/composer"; } >> "$GITHUB_ENV"
+          echo "$RUNNER_TEMP/php" >> "$GITHUB_PATH"
+      # The tests' tools (PHPUnit, its polyfills) from the lockfile; the plugin under test is the
+      # ZIP's.
+      - run: composer install --no-interaction --no-progress
+        env:
+          COMPOSER_AUTH: '{"github-oauth": {"github.com": "${{ github.token }}"}}'
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: plugin
+          path: build/
+      - name: The ZIP, extracted as WordPress installs it
+        run: |
+          # shellcheck disable=SC2016 # PHP's code, in single quotes.
+          php -r '$z = new ZipArchive(); if (true !== $z->open($argv[1]) || !$z->extractTo($argv[2])) { exit(1); }' build/sattleme-for-woocommerce-*.zip "$RUNNER_TEMP/plugin"
+          echo "SATTLEME_PLUGIN_DIR=$RUNNER_TEMP/plugin/sattleme-for-woocommerce" >> "$GITHUB_ENV"
+      - name: Unit tests, on the ZIP's files
+        run: vendor/bin/phpunit -c phpunit-unit.xml.dist
+      - name: WordPress ${{ env.WORDPRESS }}, its test library and WooCommerce ${{ env.WOOCOMMERCE }} (pinned, checked)
+        # Assigned first: a command failing inside echo's argument would not fail the step.
+        run: |
+          test_env="$(sh tools/tests/wordpress.sh "$WORDPRESS" "$WOOCOMMERCE")"
+          echo "SATTLEME_TEST_ENV=$test_env" >> "$GITHUB_ENV"
+      - name: MariaDB, run by the runner's user
+        run: |
+          socket="$(sh tools/tests/mariadb.sh start)"
+          echo "WP_TESTS_DB_HOST=localhost:$socket" >> "$GITHUB_ENV"
+      - name: Integration tests, on the ZIP's files, orders in HPOS tables
+        run: vendor/bin/phpunit -c phpunit-integration.xml.dist
+      - name: Integration tests, on the ZIP's files, orders as posts
+        run: vendor/bin/phpunit -c phpunit-integration.xml.dist
+        env:
+          SATTLEME_HPOS: "no"
+      - name: Stop MariaDB
+        if: always()
+        run: sh tools/tests/mariadb.sh stop
+
+  e2e:
+    name: End to end (WordPress ${{ matrix.wordpress }}, WooCommerce ${{ matrix.woocommerce }}, PHP ${{ matrix.php }})
+    needs: build
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - php: 8.2.32
+            sha256: 866532d2b463ff256d063432d529e966cc53e4a039109ccbfc4ee4dc51d649f1
+            wordpress: 7.0.9
+            woocommerce: 11.1.2
+          - php: 8.5.8
+            sha256: bfaa12e0f6f5788259bc20d0d3f08e1e851bce7f05d43e38fb77041e12a32663
+            wordpress: 7.1.5
+            woocommerce: 11.3.0
+    env:
+      PHP_VERSION: ${{ matrix.php }}
+      PHP_SHA256: ${{ matrix.sha256 }}
+      WORDPRESS: ${{ matrix.wordpress }}
+      WOOCOMMERCE: ${{ matrix.woocommerce }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: PHP ${{ env.PHP_VERSION }}, its checksum checked
+        run: |
+          mkdir -p "$RUNNER_TEMP/php"
+          curl -fsSL --retry 3 --retry-all-errors -o "$RUNNER_TEMP/php.tar.gz" "https://dl.static-php.dev/static-php-cli/bulk/php-$PHP_VERSION-cli-linux-x86_64.tar.gz"
+          echo "$PHP_SHA256  $RUNNER_TEMP/php.tar.gz" | sha256sum -c -
+          tar -xzf "$RUNNER_TEMP/php.tar.gz" -C "$RUNNER_TEMP/php" php
+          printf 'error_reporting=-1\nmemory_limit=1G\n' > "$RUNNER_TEMP/php/php.ini"
+          echo "PHPRC=$RUNNER_TEMP/php" >> "$GITHUB_ENV"
+          echo "$RUNNER_TEMP/php" >> "$GITHUB_PATH"
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: plugin
+          path: build/
+      # WordPress, WooCommerce, WP-CLI and Plugin Check pinned and checked; the site on PHP's
+      # built-in web server, its database tools/tests/mariadb.sh's.
+      - name: The plugin, installed from its ZIP, takes an order and its payment; Plugin Check
+        run: bash tools/e2e/run.sh "$WORDPRESS" "$WOOCOMMERCE"
+      - name: Stop MariaDB
+        if: always()
+        run: sh tools/tests/mariadb.sh stop
+
+  e2e-docker:
+    name: End to end (${{ matrix.image-name }}, WooCommerce ${{ matrix.woocommerce }}, Docker)
+    needs: build
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        # WordPress's official image (Apache), pinned by its digest: the oldest and the latest PHP
+        # the plugin supports, with the oldest and the latest WooCommerce.
+        include:
+          - image-name: wordpress:7.1.5-php8.2-apache
+            image: wordpress:7.1.5-php8.2-apache@sha256:0208dbc6f99d923bc96eed78883ea65aac79f89ad3e980c14d9c3d99aed1386f
+            woocommerce: 11.1.2
+          - image-name: wordpress:7.1.5-php8.5-apache
+            image: wordpress:7.1.5-php8.5-apache@sha256:88df223310e376822b4ea5e93378266edf4fefee22ac93fd67a112567b6fba07
+            woocommerce: 11.3.0
+    env:
+      # The PHP of the runner's side of the test (its HTTP client); the site's is the image's.
+      PHP_VERSION: 8.4.23
+      PHP_SHA256: 5fa2b5f1cc9d7f79b19718926b4f4f0bb6949db52073b2fabf8ae52de3993af5
+      IMAGE: ${{ matrix.image }}
+      WOOCOMMERCE: ${{ matrix.woocommerce }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: PHP ${{ env.PHP_VERSION }}, its checksum checked
+        run: |
+          mkdir -p "$RUNNER_TEMP/php"
+          curl -fsSL --retry 3 --retry-all-errors -o "$RUNNER_TEMP/php.tar.gz" "https://dl.static-php.dev/static-php-cli/bulk/php-$PHP_VERSION-cli-linux-x86_64.tar.gz"
+          echo "$PHP_SHA256  $RUNNER_TEMP/php.tar.gz" | sha256sum -c -
+          tar -xzf "$RUNNER_TEMP/php.tar.gz" -C "$RUNNER_TEMP/php" php
+          printf 'error_reporting=-1\nmemory_limit=1G\n' > "$RUNNER_TEMP/php/php.ini"
+          echo "PHPRC=$RUNNER_TEMP/php" >> "$GITHUB_ENV"
+          echo "$RUNNER_TEMP/php" >> "$GITHUB_PATH"
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: plugin
+          path: build/
+      # WordPress's image and MariaDB 11.4's, pinned by their digests; WooCommerce, WP-CLI and
+      # Plugin Check pinned and checked; the plugin installed from its ZIP.
+      - name: The plugin, installed from its ZIP, takes an order and its payment; Plugin Check
+        run: bash tools/e2e/docker.sh "$IMAGE" "$WOOCOMMERCE"

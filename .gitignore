@@ -1,0 +1,6 @@
+# Composer's install, Strauss's prefixed copies, and every build and test output.
+/vendor/
+/vendor-prefixed/
+/build/
+/.phpunit.result.cache
+/.phpcs-cache

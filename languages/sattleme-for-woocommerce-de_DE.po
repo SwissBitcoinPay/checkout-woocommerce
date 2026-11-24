@@ -1,0 +1,630 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: sattle.me for WooCommerce 1.0.0\n"
+"Report-Msgid-Bugs-To: https://github.com/sattleme/checkout-woocommerce/issues\n"
+"Last-Translator: \n"
+"Language-Team: sattle.me <https://sattle.me>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2026-10-24T13:46:17+00:00\n"
+"PO-Revision-Date: 2026-10-24T13:46:17+00:00\n"
+"Language: de_DE\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Domain: sattleme-for-woocommerce\n"
+
+#. Plugin Name of the plugin
+msgid "sattle.me for WooCommerce"
+msgstr "sattle.me für WooCommerce"
+
+#. Plugin URI of the plugin
+msgid "https://github.com/sattleme/checkout-woocommerce"
+msgstr "https://github.com/sattleme/checkout-woocommerce"
+
+#. Description of the plugin
+msgid "Bitcoin payments, in Lightning or on-chain, paid straight to your sattle.me wallet."
+msgstr "Bitcoin-Zahlungen, über Lightning oder on-chain, direkt in deine sattle.me-Wallet."
+
+#. Author URI of the plugin
+msgid "https://sattle.me"
+msgstr "https://sattle.me"
+
+msgid "sattle.me for WooCommerce:"
+msgstr "sattle.me für WooCommerce:"
+
+msgid "a test runs this site (the testing constant is defined): payments are not real, never use it for a shop."
+msgstr "auf dieser Website läuft ein Test (die Testkonstante ist definiert): Die Zahlungen sind nicht echt, verwende sie nie für einen Shop."
+
+#. translators: %s: what is missing, as a list.
+#, php-format
+msgid "Bitcoin payments are off: this site lacks %s."
+msgstr "Bitcoin-Zahlungen sind deaktiviert: Dieser Website fehlt %s."
+
+msgid "Bitcoin payments are not offered until you enter your integration key (WooCommerce → Settings → Payments → sattle.me)."
+msgstr "Bitcoin-Zahlungen werden erst angeboten, wenn du deinen Integrationsschlüssel eingibst (WooCommerce → Einstellungen → Zahlungen → sattle.me)."
+
+#. translators: %s: the store's currency code.
+#, php-format
+msgid "Bitcoin payments are not offered: the store’s currency, %s, is not one sattle.me converts."
+msgstr "Bitcoin-Zahlungen werden nicht angeboten: Die Währung des Shops, %s, wird von sattle.me nicht umgerechnet."
+
+#. translators: %s: a WooCommerce version, such as 11.1.
+#, php-format
+msgid "WooCommerce %s or later"
+msgstr "WooCommerce %s oder neuer"
+
+msgid "the plugin’s embedded libraries (install the plugin from its ZIP)"
+msgstr "die eingebetteten Bibliotheken des Plugins (installiere das Plugin aus seiner ZIP-Datei)"
+
+msgid "a 64-bit PHP"
+msgstr "ein 64-Bit-PHP"
+
+msgid "OpenSSL with the secp256k1 curve"
+msgstr "OpenSSL mit der Kurve secp256k1"
+
+msgid "OpenSSL with the ChaCha20 cipher"
+msgstr "OpenSSL mit der Chiffre ChaCha20"
+
+#. translators: %s: the name of a PHP extension, such as bcmath.
+#, php-format
+msgid "the PHP extension %s"
+msgstr "die PHP-Erweiterung %s"
+
+msgid "Bitcoin payment (sattle.me)"
+msgstr "Bitcoin-Zahlung (sattle.me)"
+
+msgid "no invoice (failed)"
+msgstr "keine Rechnung (fehlgeschlagen)"
+
+msgid "no invoice yet (asked again at the next try)"
+msgstr "noch keine Rechnung (beim nächsten Versuch erneut angefordert)"
+
+msgid "being created"
+msgstr "wird erstellt"
+
+msgid "given up: no final status after 90 days"
+msgstr "aufgegeben: kein endgültiger Status nach 90 Tagen"
+
+msgid "paid (in Lightning)"
+msgstr "bezahlt (über Lightning)"
+
+msgid "paid (on-chain)"
+msgstr "bezahlt (on-chain)"
+
+msgid "paid (on-chain and in Lightning)"
+msgstr "bezahlt (on-chain und über Lightning)"
+
+msgid "ended underpaid"
+msgstr "beendet, unvollständig bezahlt"
+
+msgid "expired unpaid"
+msgstr "unbezahlt abgelaufen"
+
+msgid "partly paid, waiting for the rest"
+msgstr "teilweise bezahlt, Rest ausstehend"
+
+msgid "ended, final status being checked"
+msgstr "beendet, endgültiger Status wird geprüft"
+
+msgid "waiting for the payment"
+msgstr "wartet auf die Zahlung"
+
+msgid "not checked yet"
+msgstr "noch nicht geprüft"
+
+#. translators: 1: the invoice's reference, 2: a number of days.
+#, php-format
+msgid "The Bitcoin invoice %1$s had no final status after %2$d days: its checks stopped. Please check this payment in the sattle.me app, and settle the order by hand."
+msgstr "Die Bitcoin-Rechnung %1$s hatte nach %2$d Tagen keinen endgültigen Status: Ihre Prüfungen wurden beendet. Bitte prüfe diese Zahlung in der sattle.me-App und erledige die Bestellung von Hand."
+
+msgid "sattle.me (Bitcoin)"
+msgstr "sattle.me (Bitcoin)"
+
+msgid "Accept Bitcoin payments, in Lightning or on-chain, paid straight to your sattle.me wallet. No sattle.me server holds your funds: the integration key makes invoices that pay you, and can never spend your bitcoin."
+msgstr "Akzeptiere Bitcoin-Zahlungen, über Lightning oder on-chain, direkt in deine sattle.me-Wallet. Kein Server von sattle.me verwahrt dein Geld: Der Integrationsschlüssel erstellt Rechnungen, die dich bezahlen, und kann deine Bitcoin nie ausgeben."
+
+msgid "Enable/Disable"
+msgstr "Aktivieren/Deaktivieren"
+
+msgid "Accept Bitcoin payments with sattle.me"
+msgstr "Bitcoin-Zahlungen mit sattle.me akzeptieren"
+
+msgid "Integration key"
+msgstr "Integrationsschlüssel"
+
+msgid "In the sattle.me app, create an integration for this shop and enter its secret key (sattleme_ck_…). It is checked when you save it, and never shown again. Whoever holds it can create invoices that pay you, never spend your funds: keep it secret all the same. Change it only while no Bitcoin payment is pending: those are checked with the key set here."
+msgstr "Erstelle in der sattle.me-App eine Integration für diesen Shop und gib ihren geheimen Schlüssel ein (sattleme_ck_…). Er wird beim Speichern geprüft und nie wieder angezeigt. Wer ihn besitzt, kann Rechnungen erstellen, die dich bezahlen, aber nie dein Geld ausgeben: Halte ihn trotzdem geheim. Ändere ihn nur, wenn keine Bitcoin-Zahlung aussteht: Diese werden mit dem hier eingegebenen Schlüssel geprüft."
+
+msgid "Time to pay"
+msgstr "Zahlungsfrist"
+
+msgid "How many minutes the customer has to pay a Bitcoin invoice, from 1 to 60. An invoice never outlives the order’s stock hold (WooCommerce → Settings → Products → Inventory → Hold stock)."
+msgstr "Wie viele Minuten der Kunde hat, um eine Bitcoin-Rechnung zu bezahlen, von 1 bis 60. Eine Rechnung läuft nie länger als die Lagerreservierung der Bestellung (WooCommerce → Einstellungen → Produkte → Inventar → Lagerbestand halten)."
+
+msgid "Title"
+msgstr "Titel"
+
+msgid "The payment method’s name at checkout. Empty: “Bitcoin”, in the customer’s language."
+msgstr "Der Name der Zahlungsart an der Kasse. Leer: „Bitcoin“, in der Sprache des Kunden."
+
+msgid "Bitcoin"
+msgstr "Bitcoin"
+
+msgid "Description"
+msgstr "Beschreibung"
+
+msgid "What the customer reads at checkout. Empty: the text shown here, in the customer’s language."
+msgstr "Was der Kunde an der Kasse liest. Leer: der hier angezeigte Text, in der Sprache des Kunden."
+
+msgid "Minimum order total"
+msgstr "Mindestbestellwert"
+
+msgid "Offer Bitcoin for orders of at least this total (in the store’s currency). Empty: any."
+msgstr "Bitcoin für Bestellungen ab diesem Gesamtbetrag anbieten (in der Währung des Shops). Leer: alle."
+
+msgid "Maximum order total"
+msgstr "Höchstbestellwert"
+
+msgid "Offer Bitcoin for orders of at most this total (in the store’s currency). Empty: any."
+msgstr "Bitcoin für Bestellungen bis zu diesem Gesamtbetrag anbieten (in der Währung des Shops). Leer: alle."
+
+msgid "The time to pay is a number of minutes from 1 to 60."
+msgstr "Die Zahlungsfrist ist eine Anzahl Minuten von 1 bis 60."
+
+msgid "A Bitcoin payment of this order has arrived and is being checked: it cannot be paid with another method meanwhile."
+msgstr "Eine Bitcoin-Zahlung für diese Bestellung ist eingegangen und wird geprüft: Sie kann in der Zwischenzeit nicht anders bezahlt werden."
+
+#. translators: %s: the time the order's Bitcoin invoice can be paid until.
+#, php-format
+msgid "This order has a Bitcoin invoice that can be paid until %s. To pay with another method, please wait until then: a Lightning invoice cannot be withdrawn."
+msgstr "Diese Bestellung hat eine Bitcoin-Rechnung, die bis %s bezahlt werden kann. Um anders zu bezahlen, warte bitte bis dahin: Eine Lightning-Rechnung kann nicht zurückgezogen werden."
+
+msgid "QR code of the Bitcoin payment"
+msgstr "QR-Code der Bitcoin-Zahlung"
+
+msgid "Unknown order."
+msgstr "Unbekannte Bestellung."
+
+msgid "The customer asked for a new Bitcoin invoice."
+msgstr "Der Kunde hat eine neue Bitcoin-Rechnung angefordert."
+
+msgid "in Lightning or on-chain"
+msgstr "über Lightning oder on-chain"
+
+msgid "on-chain"
+msgstr "on-chain"
+
+msgid "in Lightning"
+msgstr "über Lightning"
+
+#. translators: 1: the invoice's reference, 2: its amount in sats, 3: "in Lightning", "on-chain" or both, 4: the date and time it ends.
+#, php-format
+msgid "Bitcoin invoice %1$s created: %2$s sats, payable %3$s until %4$s."
+msgstr "Bitcoin-Rechnung %1$s erstellt: %2$s Sats, zahlbar %3$s bis %4$s."
+
+msgid "We could not create your Bitcoin invoice right now. Please try again in a moment."
+msgstr "Wir konnten deine Bitcoin-Rechnung gerade nicht erstellen. Bitte versuche es gleich noch einmal."
+
+msgid "This order cannot be paid with Bitcoin. Please choose another payment method."
+msgstr "Diese Bestellung kann nicht mit Bitcoin bezahlt werden. Bitte wähle eine andere Zahlungsart."
+
+msgid "The time to pay this order is almost over: it cannot be paid with Bitcoin."
+msgstr "Die Zahlungsfrist dieser Bestellung ist fast abgelaufen: Sie kann nicht mit Bitcoin bezahlt werden."
+
+msgid "Bitcoin payments are not available right now. Please choose another payment method or contact us."
+msgstr "Bitcoin-Zahlungen sind gerade nicht verfügbar. Bitte wähle eine andere Zahlungsart oder kontaktiere uns."
+
+msgid "This order can no longer be paid."
+msgstr "Diese Bestellung kann nicht mehr bezahlt werden."
+
+msgid "Some products of this order are no longer in stock."
+msgstr "Einige Produkte dieser Bestellung sind nicht mehr vorrätig."
+
+#. translators: %s: the order's number.
+#, php-format
+msgid "Order %s"
+msgstr "Bestellung %s"
+
+#. translators: 1: the invoice's reference, 2: its amount in sats (what came).
+#, php-format
+msgid "Bitcoin invoice %1$s paid in Lightning: %2$s sats."
+msgstr "Bitcoin-Rechnung %1$s über Lightning bezahlt: %2$s Sats."
+
+#. translators: %s: the invoice's reference.
+#, php-format
+msgid "The Bitcoin invoice %s expired unpaid."
+msgstr "Die Bitcoin-Rechnung %s ist unbezahlt abgelaufen."
+
+msgid "Settings"
+msgstr "Einstellungen"
+
+msgid "Bitcoin payments (sattle.me)"
+msgstr "Bitcoin-Zahlungen (sattle.me)"
+
+msgid "Order"
+msgstr "Bestellung"
+
+msgid "Reference"
+msgstr "Referenz"
+
+msgid "Amount"
+msgstr "Betrag"
+
+#. translators: %s: an amount in sats.
+#, php-format
+msgid "%s sats"
+msgstr "%s Sats"
+
+msgid "Created"
+msgstr "Erstellt"
+
+msgid "Status"
+msgstr "Status"
+
+msgid "Bitcoin address"
+msgstr "Bitcoin-Adresse"
+
+msgid "Transactions"
+msgstr "Transaktionen"
+
+msgid "Bitcoin payments"
+msgstr "Bitcoin-Zahlungen"
+
+msgid "The Bitcoin invoices of the customer’s orders: an on-chain payment’s address and transactions are public, on the blockchain."
+msgstr "Die Bitcoin-Rechnungen der Bestellungen des Kunden: Adresse und Transaktionen einer On-Chain-Zahlung sind öffentlich, auf der Blockchain."
+
+#. translators: %s: the order's number.
+#, php-format
+msgid "Removed the Bitcoin address and transactions of order %s."
+msgstr "Bitcoin-Adresse und Transaktionen der Bestellung %s entfernt."
+
+#. translators: %s: the order's number.
+#, php-format
+msgid "The Bitcoin payment data of order %s has been retained."
+msgstr "Die Bitcoin-Zahlungsdaten der Bestellung %s wurden beibehalten."
+
+msgid "This sample text is about the Bitcoin payments the sattle.me plugin takes. Adapt it to your shop."
+msgstr "Dieser Beispieltext betrifft die Bitcoin-Zahlungen, die das sattle.me-Plugin entgegennimmt. Passe ihn an deinen Shop an."
+
+msgid "When you pay with Bitcoin, we store the invoice of your payment with your order: its reference, its amount in sats and in our currency, the exchange rate, the Lightning invoice and, for an on-chain payment, the address you paid and the transactions that paid it. An on-chain payment is public: its address and transactions are visible on the Bitcoin blockchain."
+msgstr "Wenn du mit Bitcoin bezahlst, speichern wir die Rechnung deiner Zahlung mit deiner Bestellung: ihre Referenz, ihren Betrag in Sats und in unserer Währung, den Wechselkurs, die Lightning-Rechnung und, bei einer On-Chain-Zahlung, die Adresse, an die du bezahlt hast, und die Transaktionen, mit denen sie bezahlt wurde. Eine On-Chain-Zahlung ist öffentlich: Adresse und Transaktionen sind auf der Bitcoin-Blockchain sichtbar."
+
+msgid "To make and check the invoice, our server asks our sattle.me wallet’s Nostr relays and Lightning address, exchange rate services (CoinGecko, mempool.space, Coinbase, Kraken, OpenNode) and, for an on-chain payment, the explorer mempool.space (or our own Bitcoin node, when we set one) and BlockCypher. They see our server’s IP address and the invoice or address they are asked about, never your name, email or IP address: your browser talks to our shop only."
+msgstr "Um die Rechnung zu erstellen und zu prüfen, fragt unser Server die Nostr-Relays und die Lightning-Adresse unserer sattle.me-Wallet, Wechselkursdienste (CoinGecko, mempool.space, Coinbase, Kraken, OpenNode) und, bei einer On-Chain-Zahlung, den Explorer mempool.space (oder unseren eigenen Bitcoin-Node, wenn wir einen festgelegt haben) und BlockCypher. Sie sehen die IP-Adresse unseres Servers und die Rechnung oder Adresse, nach der sie gefragt werden, nie deinen Namen, deine E-Mail-Adresse oder deine IP-Adresse: Dein Browser kommuniziert nur mit unserem Shop."
+
+msgid "Your relays, your Lightning address, a rate source, your Bitcoin node or an explorer did not answer. Checks go on."
+msgstr "Deine Relays, deine Lightning-Adresse, eine Kursquelle, dein Bitcoin-Node oder ein Explorer haben nicht geantwortet. Die Prüfungen gehen weiter."
+
+msgid "The check took too long. Checks go on."
+msgstr "Die Prüfung hat zu lange gedauert. Die Prüfungen gehen weiter."
+
+msgid "No usable exchange rate. Try again later."
+msgstr "Kein brauchbarer Wechselkurs. Versuche es später erneut."
+
+msgid "No deposit address was free: open the sattle.me app to fill the integration’s addresses again."
+msgstr "Keine Einzahlungsadresse war frei: Öffne die sattle.me-App, um die Adressen der Integration wieder aufzufüllen."
+
+msgid "The integration key is not valid: enter the key of the integration again."
+msgstr "Der Integrationsschlüssel ist ungültig: Gib den Schlüssel der Integration erneut ein."
+
+msgid "The integration was removed in the sattle.me app: create a new one and enter its key."
+msgstr "Die Integration wurde in der sattle.me-App entfernt: Erstelle eine neue und gib ihren Schlüssel ein."
+
+msgid "The integration was not found on its relays: check the key, or update the plugin."
+msgstr "Die Integration wurde auf ihren Relays nicht gefunden: Prüfe den Schlüssel oder aktualisiere das Plugin."
+
+msgid "Your Lightning address answered with an invoice or a payment that failed the checks."
+msgstr "Deine Lightning-Adresse hat mit einer Rechnung oder Zahlung geantwortet, die die Prüfungen nicht bestanden hat."
+
+msgid "The SDK refused the order or the stored invoice (amount, currency or reference)."
+msgstr "Das SDK hat die Bestellung oder die gespeicherte Rechnung abgelehnt (Betrag, Währung oder Referenz)."
+
+msgid "No rate source has a price in the store’s currency."
+msgstr "Keine Kursquelle hat einen Preis in der Währung des Shops."
+
+msgid "The server’s PHP lacks what the plugin needs (see WooCommerce → Status → Logs)."
+msgstr "Dem PHP des Servers fehlt, was das Plugin braucht (siehe WooCommerce → Status → Protokolle)."
+
+msgid "WooCommerce could not update the order. Checks go on."
+msgstr "WooCommerce konnte die Bestellung nicht aktualisieren. Die Prüfungen gehen weiter."
+
+msgid "The invoice would have ended after the order’s stock hold: it was never shown."
+msgstr "Die Rechnung hätte nach der Lagerreservierung der Bestellung geendet: Sie wurde nie angezeigt."
+
+msgid "Some products of the order were no longer in stock."
+msgstr "Einige Produkte der Bestellung waren nicht mehr vorrätig."
+
+msgid "Another request was making this order’s invoice."
+msgstr "Eine andere Anfrage erstellte gerade die Rechnung dieser Bestellung."
+
+msgid "No final status after 90 days: the checks stopped. Check this payment in the sattle.me app."
+msgstr "Kein endgültiger Status nach 90 Tagen: Die Prüfungen wurden beendet. Prüfe diese Zahlung in der sattle.me-App."
+
+#. translators: %s: an error code of the plugin or of the sattle.me SDK, such as "network".
+#, php-format
+msgid "Error: %s."
+msgstr "Fehler: %s."
+
+msgid "Pay with Bitcoin, in Lightning or on-chain, from your wallet: the next page shows the QR code to scan."
+msgstr "Bezahle mit Bitcoin, über Lightning oder on-chain, aus deiner Wallet: Die nächste Seite zeigt den QR-Code zum Scannen."
+
+msgid "This is not the secret key of a sattle.me integration (sattleme_ck_…)."
+msgstr "Dies ist nicht der geheime Schlüssel einer sattle.me-Integration (sattleme_ck_…)."
+
+#. translators: %s: what the server's PHP lacks, as the SDK lists it (in English).
+#, php-format
+msgid "The server’s PHP lacks what sattle.me needs: %s"
+msgstr "Dem PHP des Servers fehlt, was sattle.me braucht: %s"
+
+msgid "This integration was removed in the sattle.me app. Create a new one and enter its key."
+msgstr "Diese Integration wurde in der sattle.me-App entfernt. Erstelle eine neue und gib ihren Schlüssel ein."
+
+msgid "This integration needs a newer version of sattle.me for WooCommerce."
+msgstr "Diese Integration benötigt eine neuere Version von sattle.me für WooCommerce."
+
+msgid "This integration could not be found. Please check the key, or try again in a moment."
+msgstr "Diese Integration wurde nicht gefunden. Bitte prüfe den Schlüssel oder versuche es gleich noch einmal."
+
+msgid "sattle.me could not be reached to check this key. Please try again in a moment."
+msgstr "sattle.me war nicht erreichbar, um diesen Schlüssel zu prüfen. Bitte versuche es gleich noch einmal."
+
+msgid "Saved: enter a new key to replace it"
+msgstr "Gespeichert: Gib einen neuen Schlüssel ein, um ihn zu ersetzen"
+
+msgid "No Bitcoin invoice was made for this order."
+msgstr "Für diese Bestellung wurde keine Bitcoin-Rechnung erstellt."
+
+#. translators: %s: an amount in sats.
+#, php-format
+msgid "(%s sats)"
+msgstr "(%s Sats)"
+
+msgid "Exchange rate"
+msgstr "Wechselkurs"
+
+msgid "Payable"
+msgstr "Zahlbar"
+
+msgid "Payment hash"
+msgstr "Zahlungs-Hash"
+
+msgid "Payable until"
+msgstr "Zahlbar bis"
+
+msgid "Received"
+msgstr "Erhalten"
+
+msgid "Confirmations"
+msgstr "Bestätigungen"
+
+msgid "Proof of payment"
+msgstr "Zahlungsnachweis"
+
+msgid "Last check"
+msgstr "Letzte Prüfung"
+
+msgid "Next check"
+msgstr "Nächste Prüfung"
+
+msgid "Personal data"
+msgstr "Personenbezogene Daten"
+
+msgid "Removed: the address and the transactions are erased once the payment is final."
+msgstr "Entfernt: Adresse und Transaktionen werden gelöscht, sobald die Zahlung endgültig ist."
+
+msgid "Error"
+msgstr "Fehler"
+
+#. translators: %s: the store's currency code.
+#, php-format
+msgid "The store’s currency, %s, is not one sattle.me converts: Bitcoin is not offered at checkout."
+msgstr "Die Währung des Shops, %s, wird von sattle.me nicht umgerechnet: Bitcoin wird an der Kasse nicht angeboten."
+
+msgid "Enter the secret key of an integration you created for this shop in the sattle.me app."
+msgstr "Gib den geheimen Schlüssel einer Integration ein, die du in der sattle.me-App für diesen Shop erstellt hast."
+
+msgid "There is no test mode: payments are real bitcoin payments, to your wallet."
+msgstr "Es gibt keinen Testmodus: Zahlungen sind echte Bitcoin-Zahlungen in deine Wallet."
+
+msgid "Pay with Bitcoin"
+msgstr "Mit Bitcoin bezahlen"
+
+msgid "Scan this QR code with your Bitcoin wallet."
+msgstr "Scanne diesen QR-Code mit deiner Bitcoin-Wallet."
+
+msgid "Open in my wallet"
+msgstr "In meiner Wallet öffnen"
+
+#. translators: 1: sats received, 2: sats left to pay.
+#, php-format
+msgid "We received %1$s sats, less than the amount of this order. Please pay the remaining %2$s sats."
+msgstr "Wir haben %1$s Sats erhalten, weniger als der Betrag dieser Bestellung. Bitte bezahle die restlichen %2$s Sats."
+
+msgid "An invoice for the remaining amount is being prepared: it appears here in a moment."
+msgstr "Eine Rechnung für den Restbetrag wird vorbereitet: Sie erscheint gleich hier."
+
+msgid "Remaining amount"
+msgstr "Restbetrag"
+
+msgid "Time left to pay"
+msgstr "Verbleibende Zeit zum Bezahlen"
+
+#. translators: %s: a time of day.
+#, php-format
+msgid "(until %s)"
+msgstr "(bis %s)"
+
+msgid "Lightning invoice"
+msgstr "Lightning-Rechnung"
+
+msgid "Copied"
+msgstr "Kopiert"
+
+msgid "Copy the Lightning invoice"
+msgstr "Lightning-Rechnung kopieren"
+
+msgid "Copy the address"
+msgstr "Adresse kopieren"
+
+#. translators: %s: an amount in BTC.
+#, php-format
+msgid "To pay on-chain, send exactly %s BTC to this address."
+msgstr "Um on-chain zu bezahlen, sende genau %s BTC an diese Adresse."
+
+msgid "This page updates on its own as soon as your payment arrives."
+msgstr "Diese Seite aktualisiert sich von selbst, sobald deine Zahlung eingeht."
+
+msgid "A payment on-chain is confirmed by the Bitcoin network in about 30 minutes: once it has arrived, you can close this page."
+msgstr "Eine On-Chain-Zahlung wird vom Bitcoin-Netzwerk in etwa 30 Minuten bestätigt: Sobald sie eingegangen ist, kannst du diese Seite schließen."
+
+msgid "Your payment has arrived: it is being confirmed."
+msgstr "Deine Zahlung ist eingegangen: Sie wird bestätigt."
+
+#. translators: %s: the confirmations so far, out of 3.
+#, php-format
+msgid "It is being confirmed by the Bitcoin network: %s of 3 confirmations. This usually takes about 30 minutes, after which your order is marked as paid."
+msgstr "Sie wird vom Bitcoin-Netzwerk bestätigt: %s von 3 Bestätigungen. Das dauert meist etwa 30 Minuten, danach wird deine Bestellung als bezahlt markiert."
+
+msgid "You can close this page: your order’s page shows its status."
+msgstr "Du kannst diese Seite schließen: Die Seite deiner Bestellung zeigt ihren Status."
+
+msgid "Your Bitcoin invoice is being checked: this page updates on its own in a moment."
+msgstr "Deine Bitcoin-Rechnung wird geprüft: Diese Seite aktualisiert sich gleich von selbst."
+
+msgid "The time to pay this invoice is over."
+msgstr "Die Zahlungsfrist dieser Rechnung ist abgelaufen."
+
+msgid "If you paid it in time, your payment is being checked: this page updates on its own."
+msgstr "Wenn du sie rechtzeitig bezahlt hast, wird deine Zahlung geprüft: Diese Seite aktualisiert sich von selbst."
+
+msgid "This invoice expired without being paid."
+msgstr "Diese Rechnung ist abgelaufen, ohne bezahlt worden zu sein."
+
+msgid "Pay again"
+msgstr "Erneut bezahlen"
+
+msgid "Your payment has been received. Thank you!"
+msgstr "Deine Zahlung ist eingegangen. Danke!"
+
+msgid "This order no longer takes this payment. Your order’s page shows its status."
+msgstr "Diese Bestellung nimmt diese Zahlung nicht mehr an. Die Seite deiner Bestellung zeigt ihren Status."
+
+msgid "No Bitcoin invoice could be created for this order yet."
+msgstr "Für diese Bestellung konnte noch keine Bitcoin-Rechnung erstellt werden."
+
+msgid "Try again"
+msgstr "Erneut versuchen"
+
+msgid "Check the payment"
+msgstr "Zahlung prüfen"
+
+msgid "The invoice made earlier for this attempt was not of the order’s price (the order changed since): it was never shown."
+msgstr "Die zuvor für diesen Versuch erstellte Rechnung entsprach nicht dem Preis der Bestellung (die Bestellung wurde seither geändert): Sie wurde nie angezeigt."
+
+msgid "This order’s Bitcoin payment needs the shop’s attention: please contact us to settle it."
+msgstr "Die Bitcoin-Zahlung dieser Bestellung muss vom Shop geprüft werden: Bitte kontaktiere uns, um sie zu klären."
+
+msgid "The time to pay this order’s Bitcoin invoice is over, and the invoice is being checked: another method is possible once the check found it unpaid, in a few minutes."
+msgstr "Die Zeit zum Bezahlen der Bitcoin-Rechnung dieser Bestellung ist abgelaufen, und die Rechnung wird geprüft: Eine andere Zahlungsart ist möglich, sobald die Prüfung sie als unbezahlt erkannt hat, in wenigen Minuten."
+
+msgid "Your Bitcoin payment has been received. We will contact you about your order."
+msgstr "Deine Bitcoin-Zahlung ist eingegangen. Wir melden uns bei dir zu deiner Bestellung."
+
+msgid "its first check failed, checks go on"
+msgstr "die erste Prüfung ist fehlgeschlagen, die Prüfungen gehen weiter"
+
+msgid "On the address’s page (mempool.space)"
+msgstr "Auf der Seite der Adresse (mempool.space)"
+
+#. translators: %s: the payment hash (hex) the preimage proves, its SHA-256.
+#, php-format
+msgid "Preimage of the payment hash %s"
+msgstr "Preimage des Zahlungs-Hashs %s"
+
+#. translators: %s: the invoice's reference.
+#, php-format
+msgid "This order was paid otherwise already, and its Bitcoin invoice %s was paid as well: the bitcoin reached your wallet. Refund the customer one of the payments if needed."
+msgstr "Diese Bestellung war bereits anders bezahlt, und ihre Bitcoin-Rechnung %s wurde ebenfalls bezahlt: Die Bitcoin sind in deiner Wallet eingegangen. Erstatte dem Kunden bei Bedarf eine der Zahlungen."
+
+#. translators: 1: the invoice's reference, 2: the price it was made for (an amount and a currency code).
+#, php-format
+msgid "Bitcoin invoice %1$s was paid after the order was cancelled, for a price of %2$s: the bitcoin reached your wallet. The order is on hold: reinstate it, or refund the customer from your wallet."
+msgstr "Die Bitcoin-Rechnung %1$s wurde bezahlt, nachdem die Bestellung storniert worden war, für einen Preis von %2$s: Die Bitcoin sind in deiner Wallet eingegangen. Die Bestellung ist in Wartestellung: Reaktiviere sie oder erstatte dem Kunden den Betrag aus deiner Wallet."
+
+#. translators: 1: the invoice's reference, 2: the price it was made for (an amount and a currency code), 3: what the order owes now (the same).
+#, php-format
+msgid "Bitcoin invoice %1$s was paid, for a price of %2$s. The order now owes %3$s (its total, less what was refunded): it changed after the invoice was made, so the order is on hold. Settle the difference with the customer, then update the order."
+msgstr "Die Bitcoin-Rechnung %1$s wurde bezahlt, für einen Preis von %2$s. Die Bestellung schuldet jetzt %3$s (ihr Gesamtbetrag, abzüglich der Rückerstattungen): Sie wurde geändert, nachdem die Rechnung erstellt worden war, deshalb ist die Bestellung in Wartestellung. Kläre die Differenz mit dem Kunden und aktualisiere dann die Bestellung."
+
+#. translators: 1: the invoice's reference, 2: the sats that came, 3: the invoice's amount in sats.
+#, php-format
+msgid "Bitcoin invoice %1$s paid on-chain (3 confirmations): %2$s sats came in time, for its %3$s sats."
+msgstr "Bitcoin-Rechnung %1$s on-chain bezahlt (3 Bestätigungen): %2$s Sats rechtzeitig eingegangen, für ihre %3$s Sats."
+
+#. translators: 1: the invoice's reference, 2: the sats that came, 3: the invoice's amount in sats.
+#, php-format
+msgid "Bitcoin invoice %1$s paid in Lightning, by invoices of the rest of an underpayment: %2$s sats came in time, for its %3$s sats."
+msgstr "Bitcoin-Rechnung %1$s über Lightning bezahlt, mit Rechnungen über den Rest einer unvollständigen Zahlung: %2$s Sats rechtzeitig eingegangen, für ihre %3$s Sats."
+
+#. translators: 1: the invoice's reference, 2: the sats that came, 3: the invoice's amount in sats.
+#, php-format
+msgid "Bitcoin invoice %1$s paid on-chain (3 confirmations) and in Lightning (the rest of an underpayment): %2$s sats came in time in all, for its %3$s sats."
+msgstr "Bitcoin-Rechnung %1$s on-chain (3 Bestätigungen) und über Lightning (der Rest einer unvollständigen Zahlung) bezahlt: insgesamt %2$s Sats rechtzeitig eingegangen, für ihre %3$s Sats."
+
+#. translators: %s: the invoice's amount in sats (what came).
+#, php-format
+msgid "It was paid in Lightning: %s sats, its amount."
+msgstr "Sie wurde über Lightning bezahlt: %s Sats, ihr Betrag."
+
+#. translators: 1: the sats that came, 2: the invoice's amount in sats.
+#, php-format
+msgid "It was paid on-chain (3 confirmations): %1$s sats came in time, for its %2$s sats."
+msgstr "Sie wurde on-chain bezahlt (3 Bestätigungen): %1$s Sats rechtzeitig eingegangen, für ihre %2$s Sats."
+
+#. translators: 1: the sats that came, 2: the invoice's amount in sats.
+#, php-format
+msgid "It was paid in Lightning, by invoices of the rest of an underpayment: %1$s sats came in time, for its %2$s sats."
+msgstr "Sie wurde über Lightning bezahlt, mit Rechnungen über den Rest einer unvollständigen Zahlung: %1$s Sats rechtzeitig eingegangen, für ihre %2$s Sats."
+
+#. translators: 1: the sats that came, 2: the invoice's amount in sats.
+#, php-format
+msgid "It was paid on-chain (3 confirmations) and in Lightning (the rest of an underpayment): %1$s sats came in time in all, for its %2$s sats."
+msgstr "Sie wurde on-chain (3 Bestätigungen) und über Lightning (der Rest einer unvollständigen Zahlung) bezahlt: insgesamt %1$s Sats rechtzeitig eingegangen, für ihre %2$s Sats."
+
+msgid "Less than its amount: accepted in the sattle.me app as paying it in full, by your tolerance or by your acceptance of what came."
+msgstr "Weniger als ihr Betrag: in der sattle.me-App als vollständige Zahlung akzeptiert, durch deine Toleranz oder weil du den erhaltenen Betrag akzeptiert hast."
+
+#. translators: %s: the sats received above the invoice's amount.
+#, php-format
+msgid "%s sats more than its amount reached your wallet: refund them to the customer if needed."
+msgstr "%s Sats mehr als ihr Betrag sind in deiner Wallet eingegangen: Erstatte sie dem Kunden bei Bedarf."
+
+#. translators: 1: the merchant's business name, 2: least sats, 3: most sats, 4: the number of deposit addresses, 5: the date and time of the check.
+#, php-format
+msgid "Connected to %1$s. Lightning payments from %2$s to %3$s sats; %4$s deposit address for on-chain payments. Checked on %5$s."
+msgid_plural "Connected to %1$s. Lightning payments from %2$s to %3$s sats; %4$s deposit addresses for on-chain payments. Checked on %5$s."
+msgstr[0] "Verbunden mit %1$s. Lightning-Zahlungen von %2$s bis %3$s Sats; %4$s Einzahlungsadresse für On-Chain-Zahlungen. Geprüft am %5$s."
+msgstr[1] "Verbunden mit %1$s. Lightning-Zahlungen von %2$s bis %3$s Sats; %4$s Einzahlungsadressen für On-Chain-Zahlungen. Geprüft am %5$s."
+
+#. translators: 1: sats received, 2: the invoice's amount in sats.
+#, php-format
+msgid "Your Bitcoin payment ended before it was complete: we received %1$s of the %2$s sats asked. We will contact you to settle the difference."
+msgstr "Deine Bitcoin-Zahlung endete, bevor sie vollständig war: Wir haben %1$s der verlangten %2$s Sats erhalten. Wir melden uns bei dir, um die Differenz zu klären."
+
+msgid "received, being confirmed"
+msgstr "eingegangen, wird bestätigt"
+
+#. translators: 1: the invoice's reference, 2: sats received, 3: the invoice's amount in sats.
+#, php-format
+msgid "The Bitcoin invoice %1$s ended underpaid: %2$s of its %3$s sats came, and reached your wallet. Please settle the difference with the customer."
+msgstr "Die Bitcoin-Rechnung %1$s endete unvollständig bezahlt: %2$s ihrer %3$s Sats sind in deiner Wallet eingegangen. Bitte kläre die Differenz mit dem Kunden."
+
+#. translators: 1: sats received, 2: the invoice's amount in sats, 3: the invoice's reference.
+#, php-format
+msgid "%1$s of %2$s sats came for invoice %3$s: the customer is asked for the rest until the invoice ends."
+msgstr "%1$s von %2$s Sats sind für die Rechnung %3$s eingegangen: Der Kunde wird bis zum Ende der Rechnung um den Rest gebeten."
+
+#. translators: 1: the invoice's reference, 2: sats received, 3: the invoice's amount in sats, 4: the confirmations so far.
+#, php-format
+msgid "Bitcoin invoice %1$s: %2$s sats came in time for its %3$s sats; its on-chain payment is being confirmed (%4$d of 3 confirmations, about 30 minutes)."
+msgstr "Bitcoin-Rechnung %1$s: %2$s Sats sind rechtzeitig für ihre %3$s Sats eingegangen; ihre On-Chain-Zahlung wird bestätigt (%4$d von 3 Bestätigungen, etwa 30 Minuten)."

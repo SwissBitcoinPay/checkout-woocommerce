@@ -1,0 +1,116 @@
+{
+    "name": "sattleme/checkout-woocommerce",
+    "description": "sattle.me for WooCommerce: Bitcoin payments, in Lightning or on-chain, paid straight to the merchant's sattle.me wallet.",
+    "type": "wordpress-plugin",
+    "license": "MIT",
+    "keywords": [
+        "bitcoin",
+        "lightning",
+        "payments",
+        "sattleme",
+        "woocommerce"
+    ],
+    "homepage": "https://github.com/sattleme/checkout-woocommerce",
+    "authors": [
+        {
+            "name": "sattle.me",
+            "homepage": "https://sattle.me"
+        }
+    ],
+    "support": {
+        "issues": "https://github.com/sattleme/checkout-woocommerce/issues",
+        "source": "https://github.com/sattleme/checkout-woocommerce",
+        "security": "https://github.com/sattleme/checkout-woocommerce/security/policy"
+    },
+    "repositories": [
+        {
+            "type": "path",
+            "url": "sdk",
+            "options": {
+                "symlink": false,
+                "versions": {
+                    "sattleme/checkout": "1.0.0"
+                }
+            }
+        }
+    ],
+    "require": {
+        "php": "^8.2",
+        "ext-bcmath": "*",
+        "ext-hash": "*",
+        "ext-iconv": "*",
+        "ext-json": "*",
+        "ext-openssl": "*",
+        "ext-pcre": "*",
+        "bacon/bacon-qr-code": "3.1.1",
+        "dasprid/enum": "1.0.7",
+        "sattleme/checkout": "1.0.0"
+    },
+    "require-dev": {
+        "chillerlan/php-qrcode": "6.0.1",
+        "dealerdirect/phpcodesniffer-composer-installer": "1.2.1",
+        "php-stubs/woocommerce-stubs": "11.3.0",
+        "php-stubs/wordpress-stubs": "7.1.2",
+        "php-stubs/wordpress-tests-stubs": "7.1.0",
+        "phpcompatibility/phpcompatibility-wp": "2.1.8",
+        "phpstan/phpstan": "2.3.6",
+        "phpstan/phpstan-phpunit": "2.1.2",
+        "phpstan/phpstan-strict-rules": "2.1.1",
+        "phpunit/phpunit": "9.6.39",
+        "squizlabs/php_codesniffer": "3.13.6",
+        "szepeviktor/phpstan-wordpress": "2.0.4",
+        "wp-coding-standards/wpcs": "3.4.1",
+        "yoast/phpunit-polyfills": "4.0.0"
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Sattleme\\WooCommerce\\Tests\\": "tests/"
+        }
+    },
+    "config": {
+        "platform": {
+            "php": "8.2.0"
+        },
+        "sort-packages": true,
+        "allow-plugins": {
+            "dealerdirect/phpcodesniffer-composer-installer": true
+        }
+    },
+    "extra": {
+        "strauss": {
+            "target_directory": "vendor-prefixed",
+            "namespace_prefix": "Sattleme\\WooCommerce\\Vendor\\",
+            "classmap_prefix": "Sattleme_WooCommerce_Vendor_",
+            "constant_prefix": "SATTLEME_WOOCOMMERCE_VENDOR_",
+            "packages": [
+                "bacon/bacon-qr-code",
+                "sattleme/checkout"
+            ],
+            "update_call_sites": false,
+            "include_modified_date": false,
+            "include_author": false,
+            "delete_vendor_packages": false,
+            "delete_vendor_files": false,
+            "exclude_from_copy": {
+                "file_patterns": [
+                    "#^sattleme/checkout/PIN\\.json$#",
+                    "#^sattleme/checkout/spec/#"
+                ]
+            }
+        }
+    },
+    "scripts": {
+        "prefix": "sh tools/strauss.sh",
+        "post-install-cmd": [
+            "@prefix"
+        ],
+        "post-update-cmd": [
+            "@prefix"
+        ],
+        "lint": "phpcs",
+        "analyse": "phpstan analyse --memory-limit=1G",
+        "test:unit": "phpunit -c phpunit-unit.xml.dist",
+        "test:integration": "phpunit -c phpunit-integration.xml.dist",
+        "sdk:check": "php tools/sdk.php check"
+    }
+}

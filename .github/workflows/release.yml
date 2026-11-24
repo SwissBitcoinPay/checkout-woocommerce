@@ -1,0 +1,99 @@
+name: Release
+
+# A maintainer pushes a tag vX.Y.Z on a commit of main (never a development or agent session).
+# This workflow runs the CI again, checks that the tag is the plugin's version (its main file's
+# Version; tools/package.php checks its constant and readme.txt's stable tag against it) and that
+# its commit is on main, builds the plugin's ZIP from the lockfile and checks it, then, once the
+# CI passed, keeps it with its SHA-256 as the workflow's artifact, for 90 days. The plugin is
+# distributed only through WordPress.org's plugin directory, whose only way in is its SVN
+# repository, written with a committer's password: no workflow holds that secret, so the team
+# submits the ZIP kept here (the first version on WordPress.org's "Add your plugin" page, the next
+# ones to the plugin's SVN). No GitHub release. See README.md, "Releases".
+on:
+  push:
+    tags: ["v*.*.*"]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+env:
+  COMPOSER_URL: https://getcomposer.org/download/2.11.2/composer.phar
+  COMPOSER_SHA256: dd158c0afd41d15fac89e1b4e47b5d42911fe316c3687cd5edac98319b25d028
+  # The oldest PHP the plugin supports: the ZIP's check runs php -l on every file it holds.
+  PHP_VERSION: 8.2.32
+  PHP_SHA256: 866532d2b463ff256d063432d529e966cc53e4a039109ccbfc4ee4dc51d649f1
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  ci:
+    name: CI
+    uses: ./.github/workflows/ci.yml
+
+  build:
+    name: Check the tag, build the ZIP and keep it
+    # Kept only once the CI passed on the tag's commit.
+    needs: ci
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+          # The history of main, to tell whether the tag's commit is on it.
+          fetch-depth: 0
+      - name: The tag is vX.Y.Z, the plugin's version, on a commit of main
+        env:
+          TAG: ${{ github.ref_name }}
+        run: |
+          version="$(sed -n 's/^ \* Version: *//p' sattleme-for-woocommerce.php)"
+          if ! [[ "$TAG" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "::error::The tag $TAG is not vX.Y.Z"; exit 1
+          fi
+          if [ "$TAG" != "v$version" ]; then
+            echo "::error::The tag $TAG is not the version of the plugin ($version)"; exit 1
+          fi
+          if ! grep -Eqx "## ${version//./\\.} - [0-9]{4}-[0-9]{2}-[0-9]{2}" CHANGELOG.md; then
+            echo "::error::CHANGELOG.md has no entry ## $version - <its date>"; exit 1
+          fi
+          git fetch --no-tags origin +refs/heads/main:refs/remotes/origin/main
+          if ! git merge-base --is-ancestor "$GITHUB_SHA" refs/remotes/origin/main; then
+            echo "::error::The commit of $TAG is not on main"; exit 1
+          fi
+      - name: PHP ${{ env.PHP_VERSION }} and Composer, their checksums checked
+        run: |
+          mkdir -p "$RUNNER_TEMP/php" "$RUNNER_TEMP/composer"
+          curl -fsSL --retry 3 --retry-all-errors -o "$RUNNER_TEMP/php.tar.gz" "https://dl.static-php.dev/static-php-cli/bulk/php-$PHP_VERSION-cli-linux-x86_64.tar.gz"
+          echo "$PHP_SHA256  $RUNNER_TEMP/php.tar.gz" | sha256sum -c -
+          tar -xzf "$RUNNER_TEMP/php.tar.gz" -C "$RUNNER_TEMP/php" php
+          curl -fsSL --retry 3 --retry-all-errors -o "$RUNNER_TEMP/php/composer" "$COMPOSER_URL"
+          echo "$COMPOSER_SHA256  $RUNNER_TEMP/php/composer" | sha256sum -c -
+          chmod +x "$RUNNER_TEMP/php/composer"
+          printf 'zend.assertions=1\nerror_reporting=-1\nmemory_limit=1G\n' > "$RUNNER_TEMP/php/php.ini"
+          { echo "PHPRC=$RUNNER_TEMP/php"; echo "COMPOSER_HOME=$RUNNER_TEMP/composer"; } >> "$GITHUB_ENV"
+          echo "$RUNNER_TEMP/php" >> "$GITHUB_PATH"
+      # From the lockfile, without the development tools, prefixed, zipped reproducibly, checked.
+      - name: Build the ZIP, and check it
+        env:
+          COMPOSER_AUTH: '{"github-oauth": {"github.com": "${{ github.token }}"}}'
+        run: bash tools/build.sh
+      - name: Hash of what is released
+        run: |
+          cd build
+          sha256sum sattleme-for-woocommerce-*.zip | tee SHA256SUMS
+      # The ZIP the team submits to WordPress.org, and its hash: the run's artifact.
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: sattleme-for-woocommerce-${{ github.ref_name }}
+          path: |
+            build/sattleme-for-woocommerce-*.zip
+            build/SHA256SUMS
+          if-no-files-found: error
+          retention-days: 90
+

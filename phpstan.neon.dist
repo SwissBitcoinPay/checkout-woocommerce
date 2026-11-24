@@ -1,0 +1,37 @@
+includes:
+	- vendor/szepeviktor/phpstan-wordpress/extension.neon
+	- vendor/phpstan/phpstan-strict-rules/rules.neon
+	- vendor/phpstan/phpstan-phpunit/extension.neon
+	- vendor/phpstan/phpstan-phpunit/rules.neon
+
+parameters:
+	level: max
+	phpVersion: 80200
+	paths:
+		- sattleme-for-woocommerce.php
+		- uninstall.php
+		- src
+		- templates
+		- tests
+		- tools
+	bootstrapFiles:
+		- tools/phpstan/bootstrap.php
+	scanFiles:
+		- vendor/php-stubs/woocommerce-stubs/woocommerce-stubs.php
+		- vendor/php-stubs/woocommerce-stubs/woocommerce-packages-stubs.php
+		- vendor/php-stubs/wordpress-tests-stubs/wordpress-tests-stubs.php
+	scanDirectories:
+		- vendor-prefixed
+	# Constants each site or run sets: their types, never the values tools/phpstan/bootstrap.php gives.
+	dynamicConstantNames:
+		WC_VERSION: string
+		SATTLEME_FOR_WOOCOMMERCE_TESTING: mixed
+		SATTLEME_TESTS_PLUGIN_DIR: string
+		SATTLEME_TESTS_ENV: string
+		SATTLEME_TESTS_HPOS: bool
+		WP_TESTS_DOMAIN: string
+		DB_NAME: mixed
+		DB_USER: mixed
+		DB_PASSWORD: mixed
+		DB_HOST: mixed
+	tmpDir: build/phpstan
